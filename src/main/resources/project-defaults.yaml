@@ -1,0 +1,6 @@
+swarm:
+  context:
+    path: /kafka
+java:
+  net:
+    preferIPv4Stack: true
