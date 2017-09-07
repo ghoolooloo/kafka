@@ -5,7 +5,7 @@
   <parent>
     <groupId>net.yohol</groupId>
     <artifactId>yohol</artifactId>
-    <version>2.2.4</version>
+    <version>2.3.1</version>
   </parent>
 
   <groupId>net.yohol.kafka</groupId>
@@ -60,7 +60,6 @@
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>jaxrs-validator</artifactId>
 		</dependency>
-		<dependency>
     <dependency>
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>logstash</artifactId>
@@ -68,6 +67,14 @@
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jackson2-provider</artifactId>
+    </dependency>
+    <dependency><!-- Producer, Consumer and AdminClient API -->
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+    </dependency>
+    <dependency><!-- Streams API -->
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-streams</artifactId>
     </dependency>
     <dependency>
 			<groupId>org.jboss.resteasy</groupId>
