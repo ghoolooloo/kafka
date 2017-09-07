@@ -24,7 +24,7 @@ public class MyConsumer {
 
   @PreDestroy
   public void close() {
-    runner.close();
+    runner.shutdown();
     executor.shutdown();
     System.out.println("MyConsumer已关闭===========================================================================");    
   }

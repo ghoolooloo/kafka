@@ -11,7 +11,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 
 public class ConsumerRunner implements Runnable {
-  //private final AtomicBoolean running = new AtomicBoolean(true);
+  private final AtomicBoolean running = new AtomicBoolean(true);
   private Consumer<String, String> consumer;
   private final Collection<String> topics;
   private final String groupId;
@@ -33,15 +33,26 @@ public class ConsumerRunner implements Runnable {
 
     consumer = new KafkaConsumer<>(props);
 
-    consumer.subscribe(topics);
-    while (true) {
-      ConsumerRecords<String, String> records = consumer.poll(10000);
-      for (ConsumerRecord<String, String> record : records)
-        System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+    try {
+      consumer.subscribe(topics);
+      while (running.get()) {
+        ConsumerRecords<String, String> records = consumer.poll(10000);
+        for (ConsumerRecord<String, String> record : records)
+          System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+      }
+    } catch (WakeupException e) {
+      System.out.println("抛出WakeupException@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      // Ignore exception if closing
+      if (running.get()) throw e;
+    } finally {
+      consumer.close();
+      System.out.println("Consumer已关闭。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
     }
   }
   
-  public void close() {
-    consumer.close();
-  }
+  // Shutdown hook which can be called from a separate thread
+  public void shutdown() {
+    running.set(false);
+    consumer.wakeup();
+}
 }
